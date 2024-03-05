@@ -19,77 +19,68 @@ namespace TourPlaner
     /// </summary>
     public partial class MainWindow : Window
     {
-        public ObservableCollection<TourLog> Log { get; set; }
-        public MainWindow(DataGrid dataGrid)
+        //public ObservableCollection<TourLog> Log { get; set; }
+        public MainWindow()
         {
             
 
-            // Beispiel-Daten hinzufügen
-            Log = new ObservableCollection<TourLog>
-            {
-            new TourLog { Date = "3.1.24", TotalDistance = "30 km", TotalTime = "5 hours"},
-            new TourLog { Date = "2.3.24", TotalDistance = "25 km", TotalTime = "4 hours"},
-        };
+        //    // Beispiel-Daten hinzufügen
+        //    Log = new ObservableCollection<TourLog>
+        //    {
+        //    new TourLog { Date = "3.1.24", TotalDistance = "30 km", TotalTime = "5 hours"},
+        //    new TourLog { Date = "2.3.24", TotalDistance = "25 km", TotalTime = "4 hours"},
+        //};
 
-            DataContext = this;
-            dataGrid.Items.Refresh();
+        //    //DataContext = this;
+        //    dataGrid.Items.Refresh();
         }
     }
     
 
 
-        public class TourLog : INotifyPropertyChanged
-        {
-            private string _date;
-            private string _totalTime;
-            private string _totalDistance;
+        //public class TourLog 
+        //{
+        //    private string? _date;
+        //    private string? _totalTime;
+        //    private string? _totalDistance;
 
-            public string Date
-            {
-                get { return _date; }
-                set
-                {
-                    if (_date != value)
-                    {
-                        _date = value;
-                        OnPropertyChanged(nameof(Date));
-                    }
-                }
-            }
+        //    public string? Date
+        //    {
+        //        get { return _date; }
+        //        set
+        //        {
+        //            if (_date != value)
+        //            {
+        //                _date = value;
+        //            }
+        //        }
+        //    }
 
-            public string TotalTime
-            {
-                get { return _totalTime; }
-                set
-                {
-                    if (_totalTime != value)
-                    {
-                        _totalTime = value;
-                        OnPropertyChanged(nameof(TotalTime));
-                    }
-                }
-            }
+        //    public string? TotalTime
+        //    {
+        //        get { return _totalTime; }
+        //        set
+        //        {
+        //            if (_totalTime != value)
+        //            {
+        //                _totalTime = value;
+        //            }
+        //        }
+        //    }
 
-            public string TotalDistance
-            {
-                get { return _totalDistance; }
-                set
-                {
-                    if (_totalDistance != value)
-                    {
-                        _totalDistance = value;
-                        OnPropertyChanged(nameof(TotalDistance));
-                    }
-                }
-            }
+        //    public string? TotalDistance
+        //    {
+        //        get { return _totalDistance; }
+        //        set
+        //        {
+        //            if (_totalDistance != value)
+        //            {
+        //                _totalDistance = value;
+        //            }
+        //        }
+        //    }
 
-            public event PropertyChangedEventHandler PropertyChanged;
-
-            protected virtual void OnPropertyChanged(string propertyName)
-            {
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
+        //}
     }
 
 

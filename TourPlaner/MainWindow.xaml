@@ -71,12 +71,12 @@
             </TabControl>
             <GroupBox Header="Tour Logs" Grid.Row="1" Grid.Column="1">
 
-                <ListView ItemsSource="{Binding Tours}" Height="171" Margin="0,0,-2,0">
+                <ListView ItemsSource="{Binding Path=Tours}" Height="171" Margin="0,0,-2,0">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Date" DisplayMemberBinding="{Binding Date}" Width="120"/>
-                            <GridViewColumn Header="Total Time" DisplayMemberBinding="{Binding TotalTime}" Width="120"/>
-                            <GridViewColumn Header="Total Distance" DisplayMemberBinding="{Binding TotalDistance}" Width="120"/>
+                            <GridViewColumn Header="Date" DisplayMemberBinding="{Binding Path=Date}" Width="120"/>
+                            <GridViewColumn Header="Total Time" DisplayMemberBinding="{Binding Path=TotalTime}" Width="120"/>
+                            <GridViewColumn Header="Total Distance" DisplayMemberBinding="{Binding Path=TotalDistance}" Width="120"/>
                         </GridView>
                     </ListView.View>
                 </ListView>
