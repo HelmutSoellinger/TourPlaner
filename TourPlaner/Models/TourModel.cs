@@ -1,4 +1,4 @@
-﻿namespace TourPlaner
+﻿namespace TourPlaner.Models
 {
     public class TourModel
     
