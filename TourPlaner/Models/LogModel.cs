@@ -1,6 +1,6 @@
-﻿namespace TourPlaner
+﻿namespace TourPlaner.Models
 {
-    public class TourModel
+    public class LogModel
     
     {
         public DateTime Date { get; set; }
