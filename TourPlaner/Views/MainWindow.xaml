@@ -47,24 +47,61 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <GroupBox Header="Tours" Grid.Column="0" Grid.RowSpan="2">
-                <ListView x:Name="lstTours" ItemsSource="{Binding Path=Tours}" SelectedItem="{Binding Path=SelectedTour}" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch">
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Path=Name}" Width="120"/>
+           <!-- <GroupBox Header="Tours" Grid.Column="0" Grid.RowSpan="2"> -->
+            <Grid Grid.Column="0" Grid.RowSpan="2">
+                <ListView x:Name="lstTours"  ItemsSource="{Binding Path=Tours}" SelectedItem="{Binding Path=SelectedTour}" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Tours" DisplayMemberBinding="{Binding Path=Name}"/>
 
-                        </GridView>
-                    </ListView.View>
+                            </GridView>
+                        </ListView.View>
                 </ListView>
-            </GroupBox>
-            <views:EditButton  x:Name="TourButtons"/>
-
-            <TabControl Grid.Column="1" Grid.Row="0">
+               <!-- </GroupBox> -->
+                <views:EditButton  x:Name="TourButtons" HorizontalAlignment="Right" Margin="0,0,10,0" />
+            </Grid>
+            <TabControl  Grid.Column="1" Grid.Row="0">
                 <TabItem Header="General">
-                    <Grid Background="#FFE5E5E5"/>
+                    <Grid >
+                        <TextBlock HorizontalAlignment="Left" Margin="223,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsTourSelected}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                            
+                            <Run Text="Name: "/>
+                            <Run Text="{Binding Path=SelectedTour.Name}"/>
+                            <LineBreak/>
+    
+                            <Run Text="Description: "/>
+                            <Run Text="{Binding Path=SelectedTour.Description}"/>
+                            <LineBreak/>
+    
+                            <Run Text="From: "/>
+                            <Run Text="{Binding Path=SelectedTour.StartLocation}"/>
+                            <LineBreak/>
+    
+                            <Run Text="To: "/>
+                            <Run Text="{Binding Path=SelectedTour.EndLocation}"/>
+                            <LineBreak/>
+    
+                            <Run Text="Distance: "/>
+                            <Run Text="{Binding Path=SelectedTour.Distance}"/>
+                            <LineBreak/>
+    
+                            <Run Text="Route Information: "/>
+                            <Run Text="{Binding Path=SelectedTour.RouteInformation}"/>
+                        </TextBlock>
+                    </Grid>
                 </TabItem>
-                <TabItem Header="Route">
-                    <Grid Background="#FFE5E5E5"/>
+                <TabItem Header="Route" HorizontalAlignment="Right" Margin="0,-2,-2,0" Width="47">
+                    <Image  Source="{Binding Path=SelectedTour.ImagePath}" Stretch="Fill"/>
                 </TabItem>
                 <TabItem Header="Misc">
                     <Grid Background="#FFE5E5E5"/>
@@ -73,18 +110,18 @@
             <GroupBox Header="Tour Logs" Grid.Row="1" Grid.Column="1">
                 <Grid>
 
-                    <ListView x:Name="lstLogs" ItemsSource="{Binding Path=Logs}" SelectedItem="{Binding Path=SelectedLog}" Height="171" Margin="0,0,-2,0">
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn Header="Date" DisplayMemberBinding="{Binding Path=Date}" Width="120"/>
-                            <GridViewColumn Header="Total Time" DisplayMemberBinding="{Binding Path=TotalTime}" Width="120"/>
-                            <GridViewColumn Header="Total Distance" DisplayMemberBinding="{Binding Path=TotalDistance}" Width="120"/>
-                        </GridView>
-                    </ListView.View>
-                </ListView>
-                
-                <views:EditButton  x:Name="LogButtons"/>
-        </Grid>
+                    <ListView x:Name="lstLogs" ItemsSource="{Binding SelectedTour.Logs}"  SelectedItem="{Binding Path=SelectedLog}" Margin="0,0,-2,0" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Date" DisplayMemberBinding="{Binding Path=Date}" Width="120"/>
+                                <GridViewColumn Header="Total Time" DisplayMemberBinding="{Binding Path=TotalTime}" Width="120"/>
+                                <GridViewColumn Header="Total Distance" DisplayMemberBinding="{Binding Path=TotalDistance}" Width="120"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+
+                    <views:EditButton  x:Name="LogButtons" HorizontalAlignment="Right" Margin="0,0,10,0"/>
+                </Grid>
             </GroupBox>
 
         <!--
