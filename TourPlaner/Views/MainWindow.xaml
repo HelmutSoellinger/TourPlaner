@@ -47,18 +47,18 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-           <!-- <GroupBox Header="Tours" Grid.Column="0" Grid.RowSpan="2"> -->
+            <!-- <GroupBox Header="Tours" Grid.Column="0" Grid.RowSpan="2"> -->
             <Grid Grid.Column="0" Grid.RowSpan="2">
                 <ListView x:Name="lstTours"  ItemsSource="{Binding Path=Tours}" SelectedItem="{Binding Path=SelectedTour}" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch">
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn Header="Tours" DisplayMemberBinding="{Binding Path=Name}"/>
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Tours" DisplayMemberBinding="{Binding Path=Name}"/>
 
-                            </GridView>
-                        </ListView.View>
+                        </GridView>
+                    </ListView.View>
                 </ListView>
-               <!-- </GroupBox> -->
-                <views:EditButton  x:Name="TourButtons" HorizontalAlignment="Right" Margin="0,0,10,0" />
+                <!-- </GroupBox> -->
+                <views:EditButton x:Name="TourButtons" HorizontalAlignment="Right" Margin="0,0,10,0" AddCommand="{Binding AddNewTourCommand}" DeleteCommand="{Binding DeleteTourCommand}" ModifyCommand="{Binding ModifyTourCommand}" />
             </Grid>
             <TabControl  Grid.Column="1" Grid.Row="0">
                 <TabItem Header="General">
@@ -120,11 +120,11 @@
                         </ListView.View>
                     </ListView>
 
-                    <views:EditButton  x:Name="LogButtons" HorizontalAlignment="Right" Margin="0,0,10,0"/>
+                    <views:EditButton x:Name="LogButtons" HorizontalAlignment="Right" Margin="0,0,10,0" AddCommand="{Binding AddNewLogCommand}" DeleteCommand="{Binding DeleteLogCommand}" />
                 </Grid>
             </GroupBox>
 
-        <!--
+            <!--
             <Button Content="+" HorizontalAlignment="Left" Margin="10,0,0,10" VerticalAlignment="Bottom" Width="20" RenderTransformOrigin="0.554,3.309" Grid.Row="1" Grid.Column="1"/>
             <Button Content="_-" HorizontalAlignment="Left" Margin="30,0,0,10" VerticalAlignment="Bottom" Width="20" Grid.Row="1" Grid.Column="1"/>
             <Button Content="..." HorizontalAlignment="Left" Margin="50,0,0,10" VerticalAlignment="Bottom" Width="20" Grid.Row="1" Grid.Column="1"/>

@@ -23,11 +23,7 @@ namespace TourPlaner.Views
             InitializeComponent();
        
         }
-    }
-    
-
-
-       
-    }
+    } 
+}
 
 

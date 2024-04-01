@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using TourPlaner.Models;
+using TourPlaner.Views;
 
 namespace TourPlaner.ViewModels
 {
@@ -20,7 +21,7 @@ namespace TourPlaner.ViewModels
                 {
                     newLogName = value;
                     OnPropertyChanged(nameof(NewLogName));
-                   // AddNewTourCommand.RaiseCanExecuteChanged(); // inform the [Add] Button, that the enabled/disabled state should update 
+                    AddNewTourCommand.RaiseCanExecuteChanged(); // inform the [Add] Button, that the enabled/disabled state should update 
                    //outcommented so the add button stays enabled
                 }
             }
@@ -45,7 +46,7 @@ namespace TourPlaner.ViewModels
                 set
                 {
                     selectedLog = value;
-                    DeleteTourCommand.RaiseCanExecuteChanged(); // inform the [Delete] Button, that the enabled/disabled state should update
+                    DeleteLogCommand.RaiseCanExecuteChanged(); // inform the [Delete] Button, that the enabled/disabled state should update
                 }
             }
 
@@ -55,22 +56,26 @@ namespace TourPlaner.ViewModels
                     set
                 {
                         selectedTour = value;
-                        DeleteTourCommand.RaiseCanExecuteChanged(); // inform the [Delete] Button, that the enabled/disabled state should update
+                        AddNewLogCommand.RaiseCanExecuteChanged(); // inform the [Add] Log button to enable/disable
+                ModifyTourCommand.RaiseCanExecuteChanged();
+                DeleteTourCommand.RaiseCanExecuteChanged(); // inform the [Delete] Button, that the enabled/disabled state should update
                     }
                 }
 
 
-            public RelayCommand AddNewTourCommand { get; }
-            public RelayCommand DeleteTourCommand { get; }
             
-            public RelayCommand AddNewLogCommand { get; }
-            public RelayCommand DeleteLogCommand { get; }
+        public RelayCommand AddNewLogCommand { get; }
+        public RelayCommand DeleteLogCommand { get; }
+        public RelayCommand AddNewTourCommand { get; }
+        public RelayCommand DeleteTourCommand { get; }
+        public RelayCommand ModifyTourCommand { get; }
 
 
-            public event EventHandler<LogModel>? AddLogButtonClicked;
-            public event EventHandler<LogModel?>? DeleteLogButtonClicked;
-            public event EventHandler<TourModel>? AddTourButtonClicked;
-            public event EventHandler<TourModel?>? DeleteTourButtonClicked;
+        public event EventHandler<LogModel>? AddLogButtonClicked;
+        public event EventHandler<LogModel?>? DeleteLogButtonClicked;
+        public event EventHandler<TourModel>? AddTourButtonClicked;
+        public event EventHandler<TourModel?>? DeleteTourButtonClicked;
+        public event EventHandler<TourModel?>? ModifyTourButtonClicked;
 
 
 
@@ -79,28 +84,36 @@ namespace TourPlaner.ViewModels
                 AddNewLogCommand = new RelayCommand((_) =>
                 {
                     AddLogButtonClicked?.Invoke(this, new LogModel() { Date = DateTime.Now });
-                }, (_) => true);//!string.IsNullOrWhiteSpace(NewLogName));  outcommented so the add button stays functional
-
-
+                }, (_) => SelectedTour != null); //not clickable when no tour is selected
 
                 DeleteLogCommand = new RelayCommand((_) =>
                         {
                                 DeleteLogButtonClicked?.Invoke(this, SelectedLog);
-                        }, (_) => SelectedLog != null);
+                        }, (_) => SelectedLog != null); //not clickable when no log is selected
 
                 AddNewTourCommand = new RelayCommand((_) =>
                 {
-                    AddTourButtonClicked?.Invoke(this, new TourModel() { Name = NewTourName });
-                    NewTourName = "New tour"; // Reset the tour name
-                }, (_) => true);//!string.IsNullOrWhiteSpace(NewLogName));  outcommented so the add button stays functional
-
-
+                    NewTourPopupViewModel viewModel = new NewTourPopupViewModel();
+                    NewTourPopup popup = new NewTourPopup { DataContext = viewModel };
+                    popup.ShowDialog();
+                    if (viewModel.Result)
+                        AddTourButtonClicked?.Invoke(this, viewModel.TourModel);
+                }, (_) => true);//new tour is always clickable
 
                 DeleteTourCommand = new RelayCommand((_) =>
                 {
                     DeleteTourButtonClicked?.Invoke(this, SelectedTour);
-                }, (_) => SelectedTour != null);
-            }
+                }, (_) => SelectedTour != null); //not clickable when no tour is selected
+
+            ModifyTourCommand = new RelayCommand((_) =>
+            {
+                NewTourPopupViewModel viewModel = new NewTourPopupViewModel(SelectedTour);
+                NewTourPopup popup = new NewTourPopup { DataContext = viewModel };
+                popup.ShowDialog();
+                if (viewModel.Result)
+                    ModifyTourButtonClicked?.Invoke(this, viewModel.TourModel);
+            }, (_) => SelectedTour != null); //not clickable when no tour is selected
+        }
         }
     }
 

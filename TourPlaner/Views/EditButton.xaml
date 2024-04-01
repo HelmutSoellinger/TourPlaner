@@ -7,8 +7,8 @@
              mc:Ignorable="d" 
              d:DesignHeight="50" d:DesignWidth="350">
     <Grid >
-        <Button Content="+" HorizontalAlignment="Left" Margin="10,0,0,10" VerticalAlignment="Bottom" Width="20" RenderTransformOrigin="0.554,3.309" Grid.Row="1" Grid.Column="1" Command="{Binding Path=AddNewTourCommand}" />
-        <Button Content="_-" HorizontalAlignment="Left" Margin="30,0,0,10" VerticalAlignment="Bottom" Width="20" Grid.Row="1" Grid.Column="1" Command="{Binding Path=DeleteTourCommand}"/>
-        <Button Content="..." HorizontalAlignment="Left" Margin="50,0,0,10" VerticalAlignment="Bottom" Width="20" Grid.Row="1" Grid.Column="1"/>
+        <Button Content="+" HorizontalAlignment="Left" Margin="10,0,0,10" VerticalAlignment="Bottom" Width="20" RenderTransformOrigin="0.554,3.309" Grid.Row="1" Grid.Column="1" Command="{Binding AddCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+        <Button Content="_-" HorizontalAlignment="Left" Margin="30,0,0,10" VerticalAlignment="Bottom" Width="20" Grid.Row="1" Grid.Column="1" Command="{Binding DeleteCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+        <Button Content="..." HorizontalAlignment="Left" Margin="50,0,0,10" VerticalAlignment="Bottom" Width="20" Grid.Row="1" Grid.Column="1" Command="{Binding ModifyCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
     </Grid>
 </UserControl>

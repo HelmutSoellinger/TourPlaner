@@ -35,6 +35,7 @@ namespace TourPlaner.ViewModels
                 if (tourButtonsViewModel != null)
                 {
                     tourButtonsViewModel.SelectedTour = value;
+                    logButtonsViewModel.SelectedTour = value; //muss im logbutton auch aktualisiert werden damit der knopf grau wird
                 }
                 else
                 {
@@ -122,7 +123,7 @@ namespace TourPlaner.ViewModels
         public MainViewModel(EditButtonViewModel logButtonsViewModel, EditButtonViewModel tourButtonsViewModel)
         {
             this.logButtonsViewModel = logButtonsViewModel;
-
+            
             logButtonsViewModel.AddLogButtonClicked += (sender, log) =>
             {
                 Debug.Print("Adding new log: " + log.Date);
@@ -135,7 +136,6 @@ namespace TourPlaner.ViewModels
                 // OnPropertyChanged(nameof(Logs));
 
                 logButtonsViewModel.NewLogName = "";
-            
             };
         
          
@@ -152,9 +152,9 @@ namespace TourPlaner.ViewModels
                 //  OnPropertyChanged(nameof(Logs));
 
             };
-
+            
             this.tourButtonsViewModel = tourButtonsViewModel;
-
+            
             tourButtonsViewModel.AddTourButtonClicked += (sender, tour) =>
             {
                 Debug.Print("Adding new tour: " + tour.Name);
@@ -172,7 +172,16 @@ namespace TourPlaner.ViewModels
                     OnPropertyChanged(nameof(Tours));
                 }
             };
-          
+
+            tourButtonsViewModel.ModifyTourButtonClicked += (sender, tour) =>
+            {
+                Debug.Print($"Modify tour: {tour?.Name}");
+                if (tour != null)
+                {
+                    OnPropertyChanged(nameof(Tours));
+                }
+            };
+
         }
         public MainViewModel()  // only necessary for the designer
         {

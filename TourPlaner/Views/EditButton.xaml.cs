@@ -20,6 +20,31 @@ namespace TourPlaner.Views
     /// </summary>
     public partial class EditButton : UserControl
     {
+        public static readonly DependencyProperty AddCommandProperty = DependencyProperty.Register(
+            "AddCommand", typeof(ICommand), typeof(EditButton), new PropertyMetadata(null));
+
+        public static readonly DependencyProperty DeleteCommandProperty = DependencyProperty.Register(
+            "DeleteCommand", typeof(ICommand), typeof(EditButton), new PropertyMetadata(null));
+
+        public static readonly DependencyProperty ModifyCommandProperty = DependencyProperty.Register(
+            "ModifyCommand", typeof(ICommand), typeof(EditButton), new PropertyMetadata(null));
+
+        public ICommand AddCommand
+        {
+            get { return (ICommand)GetValue(AddCommandProperty); }
+            set { SetValue(AddCommandProperty, value); }
+        }
+
+        public ICommand DeleteCommand
+        {
+            get { return (ICommand)GetValue(DeleteCommandProperty); }
+            set { SetValue(DeleteCommandProperty, value); }
+        }
+        public ICommand ModifyCommand
+        {
+            get { return (ICommand)GetValue(ModifyCommandProperty); }
+            set { SetValue(ModifyCommandProperty, value); }
+        }
         public EditButton()
         {
             InitializeComponent();
