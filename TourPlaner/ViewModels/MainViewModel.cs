@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading;
+using TourPlaner.BL;
 using TourPlaner.Models;
 
 namespace TourPlaner.ViewModels
@@ -10,6 +11,10 @@ namespace TourPlaner.ViewModels
     {
         private readonly EditButtonViewModel logButtonsViewModel;
         private readonly EditButtonViewModel tourButtonsViewModel;
+
+        public EditButtonViewModel LogButtonsViewModel => logButtonsViewModel;
+        public EditButtonViewModel TourButtonsViewModel => tourButtonsViewModel;
+        public readonly ITourManager tourManager;
        
         private LogModel? selectedLog;
         private TourModel? selectedTour;
@@ -120,8 +125,9 @@ namespace TourPlaner.ViewModels
         };
 
 
-        public MainViewModel(EditButtonViewModel logButtonsViewModel, EditButtonViewModel tourButtonsViewModel)
+        public MainViewModel(ITourManager tourManager, EditButtonViewModel logButtonsViewModel, EditButtonViewModel tourButtonsViewModel)
         {
+            this.tourManager = tourManager;
             this.logButtonsViewModel = logButtonsViewModel;
             
             logButtonsViewModel.AddLogButtonClicked += (sender, log) =>
@@ -157,6 +163,7 @@ namespace TourPlaner.ViewModels
             
             tourButtonsViewModel.AddTourButtonClicked += (sender, tour) =>
             {
+                this.tourManager.AddTour(tour);
                 Debug.Print("Adding new tour: " + tour.Name);
                 Tours.Add(tour);
                 OnPropertyChanged(nameof(Tours));

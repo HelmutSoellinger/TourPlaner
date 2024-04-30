@@ -13,18 +13,17 @@ namespace TourPlaner
     {
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            var logButtonsViewModel = new EditButtonViewModel();
-            var tourButtonsViewModel = new EditButtonViewModel();
-            var mainViewModel = new MainViewModel(logButtonsViewModel,tourButtonsViewModel);
+            var ioCConfig = (IoCContainerConfig)Application.Current.Resources["IoCConfig"];
+            var mainViewModel = ioCConfig.MainViewModel;
             var mainWindow = new MainWindow 
             {
                 DataContext = mainViewModel, 
                 LogButtons = { 
-                    DataContext = logButtonsViewModel 
+                    DataContext = mainViewModel.LogButtonsViewModel
                 },
                 TourButtons =
                 {
-                    DataContext = tourButtonsViewModel 
+                    DataContext = mainViewModel.TourButtonsViewModel
                 }
             };
             mainWindow.Show();

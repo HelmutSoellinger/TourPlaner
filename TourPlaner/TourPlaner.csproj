@@ -16,6 +16,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\TourPlaner.BL\TourPlaner.BL.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<Resource Include="Images\1.jpg" />
 		<Resource Include="Images\2.jpg" />
 		<Resource Include="Images\3.jpg" />
