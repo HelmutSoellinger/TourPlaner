@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using TourPlaner.BL;
+using TourPlaner.DAL;
 using TourPlaner.ViewModels;
 
 namespace TourPlaner
@@ -17,6 +18,8 @@ namespace TourPlaner
             var services = new ServiceCollection();
 
             services.AddSingleton<ITourManager, TourManager>();
+            services.AddSingleton<ITourRepository, TourRepository>();
+            services.AddSingleton<ITourPlanerDbContext, TourPlanerDbContext>();
             services.AddTransient<EditButtonViewModel>();
             services.AddSingleton<MainViewModel>();
 

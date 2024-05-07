@@ -21,6 +21,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\TourPlaner.BL\TourPlaner.BL.csproj" />
+	  <ProjectReference Include="..\TourPlaner.DAL\TourPlaner.DAL.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
