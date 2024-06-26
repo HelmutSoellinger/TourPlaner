@@ -14,10 +14,9 @@ namespace TourPlaner.DAL
             optionsBuilder.EnableSensitiveDataLogging();
 
             optionsBuilder.UseNpgsql("Username=postgres;Password=changeme;Host=localhost;Port=5432;Database=TourPlanerDb;");
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true); // notwendig da DateTime.Now sonst nicht geht
             // optionsBuilder.UseSqlServer("Initial Catalog=Sample;User=sa;Password=pass@word1;Data Source=localhost;MultipleActiveResultSets=True",
             // sopt => sopt.UseNetTopologySuite());
         }
-
-
     }
 }

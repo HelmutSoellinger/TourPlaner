@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:wpf="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
         xmlns:local="clr-namespace:TourPlaner.ViewModels"
         xmlns:views="clr-namespace:TourPlaner.Views"
         mc:Ignorable="d"
@@ -47,20 +48,17 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <!-- <GroupBox Header="Tours" Grid.Column="0" Grid.RowSpan="2"> -->
             <Grid Grid.Column="0" Grid.RowSpan="2">
                 <ListView x:Name="lstTours"  ItemsSource="{Binding Path=Tours}" SelectedItem="{Binding Path=SelectedTour}" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="Tours" DisplayMemberBinding="{Binding Path=Name}"/>
-
                         </GridView>
                     </ListView.View>
                 </ListView>
-                <!-- </GroupBox> -->
-                <views:EditButton x:Name="TourButtons" HorizontalAlignment="Right" Margin="0,0,10,0" AddCommand="{Binding AddNewTourCommand}" DeleteCommand="{Binding DeleteTourCommand}" ModifyCommand="{Binding ModifyTourCommand}" />
+                <views:EditButton DataContext="{Binding TourButtonsViewModel}" x:Name="TourButtons" HorizontalAlignment="Right" Margin="0,0,10,0" AddCommand="{Binding AddNewTourCommand}" DeleteCommand="{Binding DeleteTourCommand}" ModifyCommand="{Binding ModifyTourCommand}" />
             </Grid>
-            <TabControl  Grid.Column="1" Grid.Row="0">
+            <TabControl SelectedIndex="1" Grid.Column="1" Grid.Row="0">
                 <TabItem Header="General">
                     <Grid >
                         <TextBlock HorizontalAlignment="Left" Margin="223,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center">
@@ -101,7 +99,7 @@
                     </Grid>
                 </TabItem>
                 <TabItem Header="Route" HorizontalAlignment="Right" Margin="0,-2,-2,0" Width="47">
-                    <Image  Source="{Binding Path=SelectedTour.ImagePath}" Stretch="Fill"/>
+                    <wpf:WebView2 x:Name="webView" Source="about:blank"/>
                 </TabItem>
                 <TabItem Header="Misc">
                     <Grid Background="#FFE5E5E5"/>
@@ -119,16 +117,9 @@
                             </GridView>
                         </ListView.View>
                     </ListView>
-
-                    <views:EditButton x:Name="LogButtons" HorizontalAlignment="Right" Margin="0,0,10,0" AddCommand="{Binding AddNewLogCommand}" DeleteCommand="{Binding DeleteLogCommand}" />
+                    <views:EditButton DataContext="{Binding LogButtonsViewModel}" x:Name="LogButtons" HorizontalAlignment="Right" Margin="0,0,10,0" AddCommand="{Binding AddNewLogCommand}" DeleteCommand="{Binding DeleteLogCommand}" />
                 </Grid>
             </GroupBox>
-
-            <!--
-            <Button Content="+" HorizontalAlignment="Left" Margin="10,0,0,10" VerticalAlignment="Bottom" Width="20" RenderTransformOrigin="0.554,3.309" Grid.Row="1" Grid.Column="1"/>
-            <Button Content="_-" HorizontalAlignment="Left" Margin="30,0,0,10" VerticalAlignment="Bottom" Width="20" Grid.Row="1" Grid.Column="1"/>
-            <Button Content="..." HorizontalAlignment="Left" Margin="50,0,0,10" VerticalAlignment="Bottom" Width="20" Grid.Row="1" Grid.Column="1"/>
-            -->
         </Grid>
     </Grid>
 </Window>

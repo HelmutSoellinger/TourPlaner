@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TourPlaner.BL;
 using TourPlaner.DAL;
@@ -19,7 +21,7 @@ namespace TourPlaner
 
             services.AddSingleton<ITourManager, TourManager>();
             services.AddSingleton<ITourRepository, TourRepository>();
-            services.AddSingleton<ITourPlanerDbContext, TourPlanerDbContext>();
+            services.AddSingleton<TourPlanerDbContext, TourPlanerDbContext>();
             services.AddTransient<EditButtonViewModel>();
             services.AddSingleton<MainViewModel>();
 

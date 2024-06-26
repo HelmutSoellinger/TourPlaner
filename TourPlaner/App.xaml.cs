@@ -1,6 +1,10 @@
 ﻿using System.Configuration;
 using System.Data;
+using System.Diagnostics;
+using System.IO;
 using System.Windows;
+using System.Windows.Controls;
+using TourPlaner.DAL;
 using TourPlaner.ViewModels;
 using TourPlaner.Views;
 
@@ -26,6 +30,7 @@ namespace TourPlaner
                     DataContext = mainViewModel.TourButtonsViewModel
                 }
             };
+            mainViewModel.webView = mainWindow.webView;
             mainWindow.Show();
         }
     }
