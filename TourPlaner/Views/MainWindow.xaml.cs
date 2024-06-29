@@ -35,6 +35,7 @@ namespace TourPlaner.Views
             string filePath = System.IO.Path.Combine(appDir, "Resources/leaflet.html");
             webView.CoreWebView2.Navigate(filePath);
         }
+
     } 
 }
 

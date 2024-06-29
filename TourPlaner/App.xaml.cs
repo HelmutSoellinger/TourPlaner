@@ -1,38 +1,49 @@
-﻿using System.Configuration;
-using System.Data;
-using System.Diagnostics;
-using System.IO;
-using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows;
 using TourPlaner.DAL;
 using TourPlaner.ViewModels;
 using TourPlaner.Views;
+using TourPlaner.logging;
+using System.IO; 
 
 namespace TourPlaner
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
     public partial class App : Application
     {
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            var ioCConfig = (IoCContainerConfig)Application.Current.Resources["IoCConfig"];
-            var mainViewModel = ioCConfig.MainViewModel;
-            var mainWindow = new MainWindow 
+            log4net.Config.XmlConfigurator.Configure(new FileInfo("log4net.config"));
+
+
+            // Holen Sie sich den Logger
+            var logger = LoggerFactory.GetLogger();
+
+            try
             {
-                DataContext = mainViewModel, 
-                LogButtons = { 
-                    DataContext = mainViewModel.LogButtonsViewModel
-                },
-                TourButtons =
+                var ioCConfig = (IoCContainerConfig)Application.Current.Resources["IoCConfig"];
+                var mainViewModel = ioCConfig.MainViewModel;
+                var mainWindow = new MainWindow
                 {
-                    DataContext = mainViewModel.TourButtonsViewModel
-                }
-            };
-            mainViewModel.webView = mainWindow.webView;
-            mainWindow.Show();
+                    DataContext = mainViewModel,
+                    LogButtons =
+                    {
+                        DataContext = mainViewModel.LogButtonsViewModel
+                    },
+                    TourButtons =
+                    {
+                        DataContext = mainViewModel.TourButtonsViewModel
+                    }
+                };
+                mainViewModel.webView = mainWindow.webView;
+                mainWindow.Show();
+
+                // Log-Nachrichten schreiben
+                logger.Debug("Anwendung gestartet.");
+            }
+            catch (Exception ex)
+            {
+                // Fehlerbehandlung und Logging
+                logger.Error($"Ein Fehler ist aufgetreten: {ex.Message}");
+            }
         }
     }
-
 }

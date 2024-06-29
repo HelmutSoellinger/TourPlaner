@@ -30,6 +30,8 @@ namespace TourPlaner.ViewModels
 
         public bool IsTourSelected => SelectedTour != null; // checking if tour is selected
 
+        public ICommand PdfGenerierenCommand { get; }
+
         public LogModel? SelectedLog
         {
             get => selectedLog;
@@ -69,7 +71,7 @@ namespace TourPlaner.ViewModels
             if (SelectedTour == null)
                 return;
             string appDir = AppDomain.CurrentDomain.BaseDirectory;
-            string fullPath = System.IO.Path.Combine(appDir,"Resources", SelectedTour.FileName);
+            string fullPath = System.IO.Path.Combine(appDir, "Resources", SelectedTour.FileName);
             if (!File.Exists(fullPath))
             {
                 Debug.WriteLine("File Not Found!");
@@ -79,15 +81,15 @@ namespace TourPlaner.ViewModels
             string json = File.ReadAllText(fullPath).Replace("\n", String.Empty);
             await webView.CoreWebView2.ExecuteScriptAsync($"display('{json}');");
         }
-public ObservableCollection<TourModel> Tours { get; } = new ObservableCollection<TourModel>()
+        public ObservableCollection<TourModel> Tours { get; } = new ObservableCollection<TourModel>()
         {
-            new TourModel() 
+            new TourModel()
             {
-                Name = "Doberkogel", 
-                Description = "Description 1", 
-                StartLocation = "Start 1", 
-                EndLocation = "End 1", 
-                RouteInformation = "Route 1", 
+                Name = "Doberkogel",
+                Description = "Description 1",
+                StartLocation = "Start 1",
+                EndLocation = "End 1",
+                RouteInformation = "Route 1",
                 Distance = "5 km",
                 FileName="directions.js",
                 //ImagePath = "pack://application:,,,/TourPlaner;component/Images/1.jpg", // URI format for Image Source pack://application:,,,/YourSolution;component/YourImagePath/Image.jpg 
@@ -96,14 +98,14 @@ public ObservableCollection<TourModel> Tours { get; } = new ObservableCollection
                     new LogModel() { Date = DateTime.Today, TotalTime = "4:23", TotalDistance = "8,5 km" },
                     new LogModel() { Date = DateTime.Now, TotalTime = "4:12", TotalDistance = "8,1 km" },
                 } // Initialize Logs for this tour
-            }, 
-            new TourModel() 
+            },
+            new TourModel()
             {
-                Name = "Straight Line through Austria", 
-                Description = "Description 2", 
-                StartLocation = "Start 2", 
-                EndLocation = "End 2", 
-                RouteInformation = "Route 2", 
+                Name = "Straight Line through Austria",
+                Description = "Description 2",
+                StartLocation = "Start 2",
+                EndLocation = "End 2",
+                RouteInformation = "Route 2",
                 Distance = "10 km",
                 FileName="directions_other.js",
                 //ImagePath = "pack://application:,,,/TourPlaner;component/Images/2.jpg",
@@ -113,14 +115,14 @@ public ObservableCollection<TourModel> Tours { get; } = new ObservableCollection
                     new LogModel() { Date = DateTime.Now, TotalTime = "8:12", TotalDistance = "36,1 km" },
                 }
             },
-            new TourModel() 
-            { 
-                Name = "SUP to Bratislva", 
-                Description = "Description 3", 
-                StartLocation = "Start 3", 
-                EndLocation = "End 3", 
-                RouteInformation = "Route 3", 
-                Distance = "20 km", 
+            new TourModel()
+            {
+                Name = "SUP to Bratislva",
+                Description = "Description 3",
+                StartLocation = "Start 3",
+                EndLocation = "End 3",
+                RouteInformation = "Route 3",
+                Distance = "20 km",
                 FileName = "pack://application:,,,/TourPlaner;component/Images/3.jpg",
                 Logs = new ObservableCollection<LogModel>()
                 {
@@ -128,14 +130,14 @@ public ObservableCollection<TourModel> Tours { get; } = new ObservableCollection
                     new LogModel() { Date = DateTime.Now, TotalTime = "12:12", TotalDistance = "57,1 km" },
                 }
             },
-            new TourModel() 
-            { 
-                Name = "ViennaSightseeing", 
-                Description = "Description 4", 
-                StartLocation = "Start 4", 
-                EndLocation = "End 4", 
-                RouteInformation = "Route 4", 
-                Distance = "20 km", 
+            new TourModel()
+            {
+                Name = "ViennaSightseeing",
+                Description = "Description 4",
+                StartLocation = "Start 4",
+                EndLocation = "End 4",
+                RouteInformation = "Route 4",
+                Distance = "20 km",
                 FileName = "pack://application:,,,/TourPlaner;component/Images/4.jpg",
                 Logs = new ObservableCollection<LogModel>()
                 {
@@ -158,6 +160,9 @@ public ObservableCollection<TourModel> Tours { get; } = new ObservableCollection
                     Tours.Add(tour);
             }
 
+            PdfGenerierenCommand = new RelayCommand(PdfGenerieren);
+
+
             logButtonsViewModel.AddLogButtonClicked += (sender, log) =>
             {
                 Debug.Print("Adding new log: " + log.Date);
@@ -171,8 +176,8 @@ public ObservableCollection<TourModel> Tours { get; } = new ObservableCollection
 
                 logButtonsViewModel.NewLogName = "";
             };
-        
-         
+
+
             logButtonsViewModel.DeleteLogButtonClicked += (sender, log) =>
             {
                 Debug.Print($"Deleting log: {log?.Date}");
@@ -187,13 +192,13 @@ public ObservableCollection<TourModel> Tours { get; } = new ObservableCollection
                 //  OnPropertyChanged(nameof(Logs));
 
             };
-            
+
             this.tourButtonsViewModel = tourButtonsViewModel;
-            
+
             tourButtonsViewModel.AddTourButtonClicked += async (sender, tour) =>
             {
                 string filename = await APICall.Call(tour.StartLocation, tour.EndLocation);
-                tour.FileName= filename;
+                tour.FileName = filename;
                 this.tourManager.AddTour(tour);
                 Debug.Print("Adding new tour: " + tour.Name);
                 Tours.Add(tour);
@@ -228,5 +233,24 @@ public ObservableCollection<TourModel> Tours { get; } = new ObservableCollection
             tourButtonsViewModel = new EditButtonViewModel();
 
         }
+        private void PdfGenerieren(object parameter)
+        {
+            var selectedItem = SelectedTour;
+            if (selectedItem != null)
+            {
+                Debug.WriteLine("TourModell ausgewählt.");
+
+                // Create an instance of PdfGenerator
+                var pdfGenerator = new PdfGenerator();
+
+                // Call GeneratePdfForTour on the instance of PdfGenerator
+                pdfGenerator.GeneratePdfForTour(selectedItem);
+            }
+            else
+            {
+                Debug.WriteLine("Kein TourModell ausgewählt.");
+            }
+        }
+
     }
 }
