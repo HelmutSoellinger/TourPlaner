@@ -31,6 +31,12 @@
 		<Resource Include="Images\3.jpg" />
 		<Resource Include="Images\4.jpg" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="Views\NewPopup\NewLogPopup.xaml.cs">
+	    <SubType>Code</SubType>
+	  </Compile>
+	</ItemGroup>
 	<ItemGroup>
 		<None Update="Resources\leaflet.html">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>

@@ -6,10 +6,11 @@ namespace TourPlaner.DAL
 {
     public interface ITourRepository
     {
-        void AddTour(TourModel tour);
-        void AddLog(int tourId, LogModel log);
+        public void AddTour(TourModel tour);
+        public void AddLog(int tourId, LogModel log);
         public void RemoveTour(int tourId);
         public void RemoveLog(int logId);
-        ObservableCollection<TourModel> retrieveTours();
+        public void Update();
+        public ObservableCollection<TourModel> RetrieveTours();
     }
 }

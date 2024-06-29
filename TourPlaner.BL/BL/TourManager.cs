@@ -9,6 +9,7 @@ namespace TourPlaner.BL
     public class TourManager : ITourManager
     {
         private readonly ITourRepository tourRepository;
+        public ObservableCollection<TourModel> Tours { get; set; } = [];
         public TourManager(ITourRepository tourRepository)
         {
             this.tourRepository = tourRepository;
@@ -16,7 +17,7 @@ namespace TourPlaner.BL
         public void AddTour(TourModel tour)
         {
             tourRepository.AddTour(tour);
-            // Add a new tour
+            Tours.Add(tour);
         }
         public void AddLog(int tourId, LogModel log)
         {
@@ -25,14 +26,19 @@ namespace TourPlaner.BL
         public void RemoveTour(TourModel tour)
         {
             tourRepository.RemoveTour(tour.Id);
+            Tours.Remove(tour);
         }
         public void RemoveLog(LogModel log)
         {
             tourRepository.RemoveLog(log.Id);
         }
-        public ObservableCollection<TourModel> retrieveTours()
+        public void Update()
         {
-            return tourRepository.retrieveTours();
+            tourRepository.Update();
+        }
+        public ObservableCollection<TourModel> RetrieveTours()
+        {
+            return tourRepository.RetrieveTours();
         }
     }
 }

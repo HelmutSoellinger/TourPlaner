@@ -29,6 +29,7 @@ namespace TourPlaner
                 {
                     DataContext = mainViewModel.TourButtonsViewModel
                 }
+
             };
             mainViewModel.webView = mainWindow.webView;
             mainWindow.Show();

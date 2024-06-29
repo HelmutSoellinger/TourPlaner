@@ -79,7 +79,7 @@ namespace TourPlaner.ViewModels
             string json = File.ReadAllText(fullPath).Replace("\n", String.Empty);
             await webView.CoreWebView2.ExecuteScriptAsync($"display('{json}');");
         }
-public ObservableCollection<TourModel> Tours { get; } = new ObservableCollection<TourModel>()
+    public ObservableCollection<TourModel> Tours { get; } = new ObservableCollection<TourModel>()
         {
             new TourModel() 
             {
@@ -93,8 +93,8 @@ public ObservableCollection<TourModel> Tours { get; } = new ObservableCollection
                 //ImagePath = "pack://application:,,,/TourPlaner;component/Images/1.jpg", // URI format for Image Source pack://application:,,,/YourSolution;component/YourImagePath/Image.jpg 
                 Logs = new ObservableCollection<LogModel>()
                 {
-                    new LogModel() { Date = DateTime.Today, TotalTime = "4:23", TotalDistance = "8,5 km" },
-                    new LogModel() { Date = DateTime.Now, TotalTime = "4:12", TotalDistance = "8,1 km" },
+                    new LogModel() { Date = DateTime.Today.ToString(), TotalTime = "4:23", TotalDistance = "8,5 km" },
+                    new LogModel() { Date = DateTime.Now.ToString(), TotalTime = "4:12", TotalDistance = "8,1 km" },
                 } // Initialize Logs for this tour
             }, 
             new TourModel() 
@@ -109,8 +109,8 @@ public ObservableCollection<TourModel> Tours { get; } = new ObservableCollection
                 //ImagePath = "pack://application:,,,/TourPlaner;component/Images/2.jpg",
                 Logs = new ObservableCollection<LogModel>()
                 {
-                    new LogModel() { Date = DateTime.Today, TotalTime = "8:23", TotalDistance = "35,5 km" },
-                    new LogModel() { Date = DateTime.Now, TotalTime = "8:12", TotalDistance = "36,1 km" },
+                    new LogModel() { Date = DateTime.Today.ToString(), TotalTime = "8:23", TotalDistance = "35,5 km" },
+                    new LogModel() { Date = DateTime.Now.ToString(), TotalTime = "8:12", TotalDistance = "36,1 km" },
                 }
             },
             new TourModel() 
@@ -124,8 +124,8 @@ public ObservableCollection<TourModel> Tours { get; } = new ObservableCollection
                 FileName = "pack://application:,,,/TourPlaner;component/Images/3.jpg",
                 Logs = new ObservableCollection<LogModel>()
                 {
-                    new LogModel() { Date = DateTime.Today, TotalTime = "12:23", TotalDistance = "55,5 km" },
-                    new LogModel() { Date = DateTime.Now, TotalTime = "12:12", TotalDistance = "57,1 km" },
+                    new LogModel() { Date = DateTime.Today.ToString(), TotalTime = "12:23", TotalDistance = "55,5 km" },
+                    new LogModel() { Date = DateTime.Now.ToString(), TotalTime = "12:12", TotalDistance = "57,1 km" },
                 }
             },
             new TourModel() 
@@ -139,19 +139,21 @@ public ObservableCollection<TourModel> Tours { get; } = new ObservableCollection
                 FileName = "pack://application:,,,/TourPlaner;component/Images/4.jpg",
                 Logs = new ObservableCollection<LogModel>()
                 {
-                    new LogModel() { Date = DateTime.Today, TotalTime = "3:23", TotalDistance = "7,5 km" },
-                    new LogModel() { Date = DateTime.Now, TotalTime = "3:12", TotalDistance = "7,1 km" },
+                    new LogModel() { Date = DateTime.Today.ToString(), TotalTime = "3:23", TotalDistance = "7,5 km" },
+                    new LogModel() { Date = DateTime.Now.ToString(), TotalTime = "3:12", TotalDistance = "7,1 km" },
                 }
             },
         };
 
 
-        public MainViewModel(ITourManager tourManager, EditButtonViewModel logButtonsViewModel, EditButtonViewModel tourButtonsViewModel)
+        public MainViewModel(ITourManager _tourManager, EditButtonViewModel logButtonsViewModel, EditButtonViewModel tourButtonsViewModel)
         {
-            this.tourManager = tourManager;
+            tourManager = _tourManager;
             this.logButtonsViewModel = logButtonsViewModel;
+            this.tourButtonsViewModel = tourButtonsViewModel;
+            tourManager.Tours = Tours; //pass Tours Collection zum tour manager damit man hier nicht 2 mal die tours adden muss
 
-            var dbTours = this.tourManager.retrieveTours();
+            var dbTours = tourManager.RetrieveTours();
             foreach (var tour in dbTours)
             {
                 if (!Tours.Contains(tour)) // Check to avoid duplicates
@@ -163,70 +165,64 @@ public ObservableCollection<TourModel> Tours { get; } = new ObservableCollection
                 Debug.Print("Adding new log: " + log.Date);
                 if (SelectedTour != null)
                 {
-                    this.tourManager.AddLog(SelectedTour.Id, log);
+                    tourManager.AddLog(SelectedTour.Id, log);
                     OnPropertyChanged(nameof(SelectedTour)); // Notify the UI of the change
                 }
-                // Logs.Add(log);
-                // OnPropertyChanged(nameof(Logs));
-
                 logButtonsViewModel.NewLogName = "";
             };
-        
-         
             logButtonsViewModel.DeleteLogButtonClicked += (sender, log) =>
             {
                 Debug.Print($"Deleting log: {log?.Date}");
                 if (SelectedTour != null && log != null)
                 {
                     SelectedTour.Logs.Remove(log);
-                    this.tourManager.RemoveLog(log);
+                    tourManager.RemoveLog(log);
                     OnPropertyChanged(nameof(SelectedTour)); // Notify the UI of the change
                 }
-                //  if (log != null)
-                //  Logs.Remove(log);
-                //  OnPropertyChanged(nameof(Logs));
-
             };
-            
-            this.tourButtonsViewModel = tourButtonsViewModel;
-            
+            logButtonsViewModel.ModifyLogButtonClicked += (sender, log) =>
+            {
+                Debug.Print($"Modify log: {log?.Date}");
+                if (SelectedTour != null && log != null)
+                {
+                    tourManager.Update();
+                    OnPropertyChanged(nameof(SelectedTour)); // Notify the UI of the change
+                }
+            };
             tourButtonsViewModel.AddTourButtonClicked += async (sender, tour) =>
             {
                 string filename = await APICall.Call(tour.StartLocation, tour.EndLocation);
                 tour.FileName= filename;
-                this.tourManager.AddTour(tour);
+                tourManager.AddTour(tour);
                 Debug.Print("Adding new tour: " + tour.Name);
-                Tours.Add(tour);
                 OnPropertyChanged(nameof(Tours));
                 tourButtonsViewModel.NewTourName = "";
             };
-
             tourButtonsViewModel.DeleteTourButtonClicked += (sender, tour) =>
             {
                 Debug.Print($"Deleting tour: {tour?.Name}");
                 if (tour != null)
                 {
-                    this.tourManager.RemoveTour(tour);
-                    Tours.Remove(tour);
+                    Debug.WriteLine(tour.FileName);
+                    File.Delete($"./Resources/{tour.FileName}");
+                    tourManager.RemoveTour(tour);
                     OnPropertyChanged(nameof(Tours));
                 }
             };
-
             tourButtonsViewModel.ModifyTourButtonClicked += (sender, tour) =>
             {
                 Debug.Print($"Modify tour: {tour?.Name}");
-                if (tour != null)
+                if (tour != null) //kein ahnung warum tour null sein sollte, hab ich den null-check geadded?
                 {
+                    tourManager.Update();
                     OnPropertyChanged(nameof(Tours));
                 }
             };
-
         }
         public MainViewModel()  // only necessary for the designer
         {
             logButtonsViewModel = new EditButtonViewModel();
             tourButtonsViewModel = new EditButtonViewModel();
-
         }
     }
 }

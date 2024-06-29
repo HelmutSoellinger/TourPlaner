@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:TourPlaner.ViewModels"
         xmlns:views="clr-namespace:TourPlaner.Views"
         mc:Ignorable="d"
-        Title="TourPlaner" Height="450" Width="800">
+        Title="TourPlaner" Height="450" Width="1000">
     <Window.DataContext>
         <local:MainViewModel/>
     </Window.DataContext>
@@ -114,10 +114,13 @@
                                 <GridViewColumn Header="Date" DisplayMemberBinding="{Binding Path=Date}" Width="120"/>
                                 <GridViewColumn Header="Total Time" DisplayMemberBinding="{Binding Path=TotalTime}" Width="120"/>
                                 <GridViewColumn Header="Total Distance" DisplayMemberBinding="{Binding Path=TotalDistance}" Width="120"/>
+                                <GridViewColumn Header="Comment" DisplayMemberBinding="{Binding Path=Comment}" Width="120"/>
+                                <GridViewColumn Header="Difficulty" DisplayMemberBinding="{Binding Path=Difficulty}" Width="120"/>
+                                <GridViewColumn Header="Rating" DisplayMemberBinding="{Binding Path=Rating}" Width="120"/>
                             </GridView>
                         </ListView.View>
                     </ListView>
-                    <views:EditButton DataContext="{Binding LogButtonsViewModel}" x:Name="LogButtons" HorizontalAlignment="Right" Margin="0,0,10,0" AddCommand="{Binding AddNewLogCommand}" DeleteCommand="{Binding DeleteLogCommand}" />
+                    <views:EditButton DataContext="{Binding LogButtonsViewModel}" x:Name="LogButtons" HorizontalAlignment="Right" Margin="0,0,10,0" AddCommand="{Binding AddNewLogCommand}" DeleteCommand="{Binding DeleteLogCommand}" ModifyCommand="{Binding ModifyLogCommand}" />
                 </Grid>
             </GroupBox>
         </Grid>

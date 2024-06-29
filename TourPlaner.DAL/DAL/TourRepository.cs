@@ -25,16 +25,6 @@ namespace TourPlaner.DAL
             dbContext.Tours.Add(tour);
             dbContext.SaveChanges();
         }
-        public void AddLog(int tourId, LogModel log)
-        {
-            var tour = dbContext.Tours.Find(tourId);
-            if (tour != null && tour.Logs == null)
-            {
-                tour.Logs = new ObservableCollection<LogModel>();
-            }
-            tour.Logs?.Add(log);
-            dbContext.SaveChanges();
-        }
         public void RemoveTour(int tourId)
         {
             // Find the tour by ID
@@ -52,6 +42,24 @@ namespace TourPlaner.DAL
                 dbContext.Tours.Remove(tour);
                 dbContext.SaveChanges();
             }
+            else
+            {
+                throw new Exception("Tour not found.");
+            }
+        }
+        public void Update()
+        {
+            dbContext.SaveChanges();
+        }
+        public void AddLog(int tourId, LogModel log)
+        {
+            var tour = dbContext.Tours.Find(tourId);
+            if (tour != null && tour.Logs == null)
+            {
+                tour.Logs = new ObservableCollection<LogModel>();
+            }
+            tour.Logs?.Add(log);
+            dbContext.SaveChanges();
         }
         public void RemoveLog(int logId)
         {
@@ -61,8 +69,12 @@ namespace TourPlaner.DAL
                 dbContext.Logs.Remove(logToRemove);
                 dbContext.SaveChanges();
             }
+            else
+            {
+                throw new Exception("Log not found.");
+            }
         }
-        public ObservableCollection<TourModel> retrieveTours()
+        public ObservableCollection<TourModel> RetrieveTours()
         {
             var tours = dbContext.Tours.Include(t => t.Logs).ToList();
             return new ObservableCollection<TourModel>(tours);
