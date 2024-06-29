@@ -55,6 +55,11 @@
                             <GridViewColumn Header="Tours" DisplayMemberBinding="{Binding Path=Name}"/>
                         </GridView>
                     </ListView.View>
+                    <ListView.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="PDF generieren" Command="{Binding PdfGenerierenCommand}"/>
+                        </ContextMenu>
+                    </ListView.ContextMenu>
                 </ListView>
                 <views:EditButton DataContext="{Binding TourButtonsViewModel}" x:Name="TourButtons" HorizontalAlignment="Right" Margin="0,0,10,0" AddCommand="{Binding AddNewTourCommand}" DeleteCommand="{Binding DeleteTourCommand}" ModifyCommand="{Binding ModifyTourCommand}" />
             </Grid>
