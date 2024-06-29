@@ -9,28 +9,15 @@
   </PropertyGroup>
 
 	<ItemGroup>
-		<None Remove="Images\1.jpg" />
-		<None Remove="Images\2.jpg" />
-		<None Remove="Images\3.jpg" />
-		<None Remove="Images\4.jpg" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <PackageReference Include="log4net" Version="2.0.17" />
 	  <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
 	  <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2592.51" />
+	  <PackageReference Include="System.Drawing.Common" Version="8.0.6" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <ProjectReference Include="..\TourPlaner.BL\TourPlaner.BL.csproj" />
 	  <ProjectReference Include="..\TourPlaner.DAL\TourPlaner.DAL.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Resource Include="Images\1.jpg" />
-		<Resource Include="Images\2.jpg" />
-		<Resource Include="Images\3.jpg" />
-		<Resource Include="Images\4.jpg" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -45,6 +32,11 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="PDFs\" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Reference Include="System.Windows.Forms">
+	    <HintPath>..\..\..\..\..\..\..\..\Windows\Microsoft.NET\assembly\GAC_MSIL\System.Windows.Forms\v4.0_4.0.0.0__b77a5c561934e089\System.Windows.Forms.dll</HintPath>
+	  </Reference>
 	</ItemGroup>
 
 </Project>

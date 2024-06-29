@@ -16,7 +16,7 @@ namespace TourPlaner.logging
         {
             if (!File.Exists(configPath))
             {
-                throw new ArgumentException($"Konfigurationsdatei '{configPath}' existiert nicht.", nameof(configPath));
+                //throw new ArgumentException($"Konfigurationsdatei '{configPath}' existiert nicht.", nameof(configPath));
             }
 
             log4net.Config.XmlConfigurator.Configure(new FileInfo(configPath));

@@ -18,7 +18,7 @@ namespace TourPlaner.BL
     public class APICall
     {
         async public static Task<string> Call(string _start, string _finish) {
-            var key = "5b3ce3597851110001cf6248556f66a8e0ac4d1f99d4711943e36e0a";
+            var key = "";
             var baseAddress = new Uri("https://api.openrouteservice.org");
 
             using var httpClient = new HttpClient{BaseAddress = baseAddress};
@@ -48,7 +48,7 @@ namespace TourPlaner.BL
         }
         async private static Task<float[]> Translate(string adr)
         {
-            var key = "5b3ce3597851110001cf6248556f66a8e0ac4d1f99d4711943e36e0a";
+            var key = "";
             var baseAddress = new Uri($"https://api.openrouteservice.org/geocode/search?api_key={key}&text={adr.Replace(" ","%20")}");
             using var httpClient = new HttpClient { BaseAddress = baseAddress };
             
@@ -75,7 +75,7 @@ namespace TourPlaner.BL
         async public static Task<AutoCompleteObject> Complete(string adr)
         {
             var completion = new AutoCompleteObject();
-            var key = "5b3ce3597851110001cf6248556f66a8e0ac4d1f99d4711943e36e0a";
+            var key = "";
             var baseAddress = new Uri($"https://api.openrouteservice.org/geocode/autocomplete?api_key={key}&text={adr.Replace(" ", "%20")}");
             using var httpClient = new HttpClient { BaseAddress = baseAddress };
 

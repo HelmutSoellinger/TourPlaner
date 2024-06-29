@@ -19,10 +19,8 @@
 
         <Menu HorizontalAlignment="Stretch" Height="22" VerticalAlignment="Top">
             <MenuItem Header="_File">
-                <MenuItem Header="_New" />
-                <MenuItem Header="_Open" />
-                <MenuItem Header="_Save" />
-                <MenuItem Header="_Exit" />
+                <MenuItem Header="_Import Tour" Command="{Binding TourImport}"/>
+                <MenuItem Header="_Export Tour" Command="{Binding TourExport}"/>
             </MenuItem>
             <MenuItem Header="_Edit">
                 <MenuItem Header="_Cut" />
@@ -106,7 +104,7 @@
                 <TabItem Header="Route" HorizontalAlignment="Right" Margin="0,-2,-2,0" Width="47">
                     <wpf:WebView2 x:Name="webView" Source="about:blank"/>
                 </TabItem>
-                <TabItem Header="Misc">
+                <TabItem Header="Misc" Height="22" Margin="-2,-2,-2,0" VerticalAlignment="Top">
                     <Grid Background="#FFE5E5E5"/>
                 </TabItem>
             </TabControl>

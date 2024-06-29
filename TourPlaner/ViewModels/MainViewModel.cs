@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Text.Json;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,6 +12,8 @@ using System.Windows.Input;
 using TourPlaner.BL;
 using TourPlaner.Models;
 using TourPlaner.Views;
+using System.Windows.Forms;
+using Org.BouncyCastle.Utilities;
 
 namespace TourPlaner.ViewModels
 {
@@ -31,6 +34,8 @@ namespace TourPlaner.ViewModels
         public bool IsTourSelected => SelectedTour != null; // checking if tour is selected
 
         public ICommand PdfGenerierenCommand { get; }
+        public ICommand TourImport { get; }
+        public RelayCommand TourExport { get; }
 
         public LogModel? SelectedLog
         {
@@ -53,14 +58,10 @@ namespace TourPlaner.ViewModels
                     tourButtonsViewModel.SelectedTour = value;
                     logButtonsViewModel.SelectedTour = value; //muss im logbutton auch aktualisiert werden damit der knopf grau wird
                 }
-                else
-                {
-                    // Handle the case where tourButtonsViewModel is null
-                    // For example: throw an exception or log an error
-                }
                 UpdateLeaflet();
                 OnPropertyChanged(nameof(SelectedTour));
-                OnPropertyChanged(nameof(IsTourSelected));   // Notify the UI of the change
+                OnPropertyChanged(nameof(IsTourSelected));
+                TourExport.RaiseCanExecuteChanged();
             }
         }
 
@@ -154,6 +155,9 @@ namespace TourPlaner.ViewModels
             this.logButtonsViewModel = logButtonsViewModel;
             this.tourButtonsViewModel = tourButtonsViewModel;
             tourManager.Tours = Tours; //pass Tours Collection zum tour manager damit man hier nicht 2 mal die tours adden muss
+            PdfGenerierenCommand = new RelayCommand(PdfGenerieren);
+            TourImport = new RelayCommand(ImportTour);
+            TourExport = new RelayCommand(ExportTour, (_) => SelectedTour != null);
 
             var dbTours = tourManager.RetrieveTours();
             foreach (var tour in dbTours)
@@ -161,9 +165,6 @@ namespace TourPlaner.ViewModels
                 if (!Tours.Contains(tour)) // Check to avoid duplicates
                     Tours.Add(tour);
             }
-
-            PdfGenerierenCommand = new RelayCommand(PdfGenerieren);
-
 
             logButtonsViewModel.AddLogButtonClicked += (sender, log) =>
             {
@@ -249,5 +250,57 @@ namespace TourPlaner.ViewModels
             }
         }
 
+        private void ImportTour(object parameter)
+        {
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+
+            // Set filter for file extension and default file extension 
+            dlg.DefaultExt = ".tour";
+            dlg.Filter = "Tour Files (*.tour)|*.tour";
+
+            // Display OpenFileDialog by calling ShowDialog method 
+            Nullable<bool> result = dlg.ShowDialog();
+
+            // Get the selected file name and display in a TextBox 
+            if (result == true)
+            {
+                // Open document 
+                string filename = dlg.FileName;
+                if (!File.Exists(filename))
+                {
+                    throw new FileNotFoundException($"The file {filename} does not exist.");
+                }
+
+                string jsonString = File.ReadAllText(filename);
+                var tour = JsonSerializer.Deserialize<TourModel>(jsonString);
+                tour.Id = 0;
+                foreach (var log in tour.Logs)
+                {
+                    log.Id = 0;
+                }
+                tourManager.AddTour(tour);
+                Debug.Print("Adding new tour: " + tour.Name);
+                OnPropertyChanged(nameof(Tours));
+                tourButtonsViewModel.NewTourName = "";
+            }
+        }
+        private void ExportTour(object parameter)
+        {
+            using var fbd = new FolderBrowserDialog();
+            
+            DialogResult result = fbd.ShowDialog();
+
+            if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+            {
+                var tourModel = SelectedTour;
+                var options = new JsonSerializerOptions
+                {
+                    WriteIndented = true // Makes the output more readable
+                };
+
+                string jsonString = JsonSerializer.Serialize(tourModel, options);
+                File.WriteAllText($"{fbd.SelectedPath}/{tourModel.Name}.tour", jsonString);
+            }
+        }
     }
 }

@@ -47,7 +47,7 @@ namespace TourPlaner.BL
                         document.Add(new Paragraph("Logs:"));
                         foreach (var log in selectedTour.Logs)
                         {
-                            document.Add(new Paragraph($"ID: {log.Id}, Date: {log.Date.ToShortDateString()}, Total Time: {log.TotalTime}, Total Distance: {log.TotalDistance}"));
+                            document.Add(new Paragraph($"ID: {log.Id}, Date: {log.Date}, Total Time: {log.TotalTime}, Total Distance: {log.TotalDistance}"));
                         }
                     }
 
