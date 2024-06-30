@@ -1,6 +1,6 @@
 ﻿using System.Windows.Input;
 
-namespace TourPlaner
+namespace TourPlaner.ViewModels
 {
     public class RelayCommand : ICommand
     {
@@ -9,14 +9,10 @@ namespace TourPlaner
 
         public event EventHandler? CanExecuteChanged;
 
-        public RelayCommand(Action<object?> execute, Predicate<object?>? canExecute)
+        public RelayCommand(Action<object?> execute, Predicate<object?>? canExecute = null)
         {
             _execute = execute;
             _canExecute = canExecute;
-        }
-
-        public RelayCommand(Action<object?> execute) : this(execute, null)
-        {
         }
 
         public bool CanExecute(object? parameter)
