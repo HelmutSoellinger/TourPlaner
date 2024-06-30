@@ -6,10 +6,8 @@ using iText.Layout.Element;
 using log4net.Core;
 using log4net;
 using TourPlaner.Models;
-using Microsoft.Extensions.Logging;
 using TourPlaner;
 using log4net.Config;
-
 namespace TourPlaner.BL
 {
     public class PdfGenerator
@@ -17,6 +15,7 @@ namespace TourPlaner.BL
         public PdfGenerator()
         {
         }
+
         public void GeneratePdfForTour(TourModel selectedTour)
         {
             string appDir = AppDomain.CurrentDomain.BaseDirectory;
@@ -24,7 +23,7 @@ namespace TourPlaner.BL
             string relativePathToTargetFolder = @"..\..\..\PDFs";
             string targetFolderPath = System.IO.Path.Combine(appDir, relativePathToTargetFolder);
             // Stellen Sie sicher, dass der Zielspezialordner existiert, falls er noch nicht existiert
-            Directory.CreateDirectory(targetFolderPath);
+            System.IO.Directory.CreateDirectory(targetFolderPath);
             // Dynamischer Dateiname basierend auf der Tour-Information
             string fileName = $"{selectedTour.Name}.pdf";
             string filePath = System.IO.Path.Combine(targetFolderPath, fileName);
@@ -61,7 +60,6 @@ namespace TourPlaner.BL
                 UseShellExecute = true
             });
 
-            Console.WriteLine("PDF generiert und geöffnet.");
         }
     }
 }

@@ -18,7 +18,10 @@ namespace TourPlaner.BL
     public class APICall
     {
         async public static Task<string> Call(string _start, string _finish) {
-            var key = "";
+            // Pfad zur API-Schlüsseldatei
+            var apiKeyFilePath = "../../../../apikey.txt";
+            // Lesen des API-Schlüssels aus der Datei
+            var key = File.ReadAllText(apiKeyFilePath).Trim();
             var baseAddress = new Uri("https://api.openrouteservice.org");
 
             using var httpClient = new HttpClient{BaseAddress = baseAddress};
@@ -48,8 +51,10 @@ namespace TourPlaner.BL
         }
         async private static Task<float[]> Translate(string adr)
         {
-            var key = "";
-            var baseAddress = new Uri($"https://api.openrouteservice.org/geocode/search?api_key={key}&text={adr.Replace(" ","%20")}");
+            // Pfad zur API-Schlüsseldatei
+            var apiKeyFilePath = "../../../../apikey.txt";
+            // Lesen des API-Schlüssels aus der Datei
+            var key = File.ReadAllText(apiKeyFilePath).Trim(); var baseAddress = new Uri($"https://api.openrouteservice.org/geocode/search?api_key={key}&text={adr.Replace(" ","%20")}");
             using var httpClient = new HttpClient { BaseAddress = baseAddress };
             
             httpClient.DefaultRequestHeaders.Clear();
@@ -75,7 +80,10 @@ namespace TourPlaner.BL
         async public static Task<AutoCompleteObject> Complete(string adr)
         {
             var completion = new AutoCompleteObject();
-            var key = "";
+            // Pfad zur API-Schlüsseldatei
+            var apiKeyFilePath = "../../../../apikey.txt"; 
+            // Lesen des API-Schlüssels aus der Datei
+            var key = File.ReadAllText(apiKeyFilePath).Trim();
             var baseAddress = new Uri($"https://api.openrouteservice.org/geocode/autocomplete?api_key={key}&text={adr.Replace(" ", "%20")}");
             using var httpClient = new HttpClient { BaseAddress = baseAddress };
 

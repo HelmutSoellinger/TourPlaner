@@ -12,10 +12,11 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EB763262-3E92-4D3A-A670-2CBECF5C9A8E}"
 	ProjectSection(SolutionItems) = preProject
 		docker-compose.yml = docker-compose.yml
+		apikey.txt = apikey.txt
 		ReadMe.txt = ReadMe.txt
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TourPlaner.DAL", "TourPlaner.DAL\TourPlaner.DAL.csproj", "{9418D5C5-EDC6-481F-B0A7-479BE7D0B16A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TourPlaner.DAL", "TourPlaner.DAL\TourPlaner.DAL.csproj", "{9418D5C5-EDC6-481F-B0A7-479BE7D0B16A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

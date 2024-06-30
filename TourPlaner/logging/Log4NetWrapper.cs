@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Windows.Media.Media3D;
 
@@ -16,11 +17,14 @@ namespace TourPlaner.logging
         {
             if (!File.Exists(configPath))
             {
-                //throw new ArgumentException($"Konfigurationsdatei '{configPath}' existiert nicht.", nameof(configPath));
+                string currentDirectory = System.IO.Directory.GetCurrentDirectory();
+            // Debug.WriteLine($"Current working directory: {currentDirectory}");
+
+                throw new ArgumentException($"Konfigurationsdatei '{configPath}' existiert nicht.", nameof(configPath));
             }
 
-            log4net.Config.XmlConfigurator.Configure(new FileInfo(configPath));
             var logger = log4net.LogManager.GetLogger(caller);  // System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
+            log4net.Config.XmlConfigurator.Configure(new FileInfo(configPath));
             return new Log4NetWrapper(logger);
         }
 

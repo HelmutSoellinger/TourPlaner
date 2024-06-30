@@ -11,7 +11,6 @@ namespace TourPlaner
     {
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            log4net.Config.XmlConfigurator.Configure(new FileInfo("log4net.config"));
 
 
             // Holen Sie sich den Logger

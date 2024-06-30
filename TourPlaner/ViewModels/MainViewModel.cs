@@ -14,12 +14,14 @@ using TourPlaner.Models;
 using TourPlaner.Views;
 using System.Windows.Forms;
 using Org.BouncyCastle.Utilities;
+using TourPlaner.logging;
 
 
 namespace TourPlaner.ViewModels
 {
     public class MainViewModel : BaseViewModel
     {
+        private static readonly ILoggerWrapper logger = LoggerFactory.GetLogger(); //Declaring Logger
         private readonly EditButtonViewModel logButtonsViewModel;
         private readonly EditButtonViewModel tourButtonsViewModel;
 
@@ -65,7 +67,7 @@ namespace TourPlaner.ViewModels
                 TourExport.RaiseCanExecuteChanged();
             }
         }
-
+        
         public async void UpdateLeaflet()
         {
             if (webView == null) //should never be the case but unit tests trigger this...
@@ -78,7 +80,9 @@ namespace TourPlaner.ViewModels
             string fullPath = System.IO.Path.Combine(appDir, "Resources", SelectedTour.FileName);
             if (!File.Exists(fullPath))
             {
-                Debug.WriteLine("File Not Found!");
+
+                logger.Debug("File Not Found!");
+
                 await webView.CoreWebView2.ExecuteScriptAsync($"map.remove();var map = L.map('map');");
                 return;
             }
@@ -161,6 +165,8 @@ namespace TourPlaner.ViewModels
             PdfGenerierenCommand = new RelayCommand(PdfGenerieren, (_) => SelectedTour != null);
             TourImport = new RelayCommand(ImportTour);
             TourExport = new RelayCommand(ExportTour, (_) => SelectedTour != null);
+            var logger = LoggerFactory.GetLogger();
+
 
             var dbTours = tourManager.RetrieveTours();
             foreach (var tour in dbTours)
@@ -171,7 +177,7 @@ namespace TourPlaner.ViewModels
 
             logButtonsViewModel.AddLogButtonClicked += (sender, log) =>
             {
-                Debug.Print("Adding new log: " + log.Date);
+                logger.Debug("Adding new log: " + log.Date);
                 if (SelectedTour != null)
                 {
                     tourManager.AddLog(SelectedTour.Id, log);
@@ -181,7 +187,7 @@ namespace TourPlaner.ViewModels
             };
             logButtonsViewModel.DeleteLogButtonClicked += (sender, log) =>
             {
-                Debug.Print($"Deleting log: {log?.Date}");
+                logger.Debug($"Deleting log: {log?.Date}");
                 if (SelectedTour != null && log != null)
                 {
                     SelectedTour.Logs.Remove(log);
@@ -191,7 +197,7 @@ namespace TourPlaner.ViewModels
             };
             logButtonsViewModel.ModifyLogButtonClicked += (sender, log) =>
             {
-                Debug.Print($"Modify log: {log?.Date}");
+                logger.Debug($"Modify log: {log?.Date}");
                 if (SelectedTour != null && log != null)
                 {
                     tourManager.Update();
@@ -208,7 +214,7 @@ namespace TourPlaner.ViewModels
                     string fullPath = System.IO.Path.Combine(appDir, "Resources", filename);
                     if (!File.Exists(fullPath))
                     {
-                        Debug.WriteLine("File Not Found!");
+                        logger.Debug("File Not Found!");
                     }
                     else
                     {
@@ -220,18 +226,18 @@ namespace TourPlaner.ViewModels
                             tour.Distance = $"{a}m";
                         }
                         catch {
-                            Debug.WriteLine("Couldnt Parse Json!");
+                            logger.Debug("Couldnt Parse Json!");
                         }
                     }
                 }
                 tourManager.AddTour(tour);
-                Debug.Print("Adding new tour: " + tour.Name);
+                logger.Debug("Adding new tour: " + tour.Name);
                 OnPropertyChanged(nameof(Tours));
                 tourButtonsViewModel.NewTourName = "";
             };
             tourButtonsViewModel.DeleteTourButtonClicked += (sender, tour) =>
             {
-                Debug.Print($"Deleting tour: {tour?.Name}");
+                logger.Debug($"Deleting tour: {tour?.Name}");
                 string filename = $"./Resources/{tour.FileName}";
                 if (tour != null)
                 {
@@ -243,7 +249,7 @@ namespace TourPlaner.ViewModels
             };
             tourButtonsViewModel.ModifyTourButtonClicked += (sender, tour) =>
             {
-                Debug.Print($"Modify tour: {tour?.Name}");
+                logger.Debug($"Modify tour: {tour?.Name}");
                 if (tour != null) //kein ahnung warum tour null sein sollte, hab ich den null-check geadded?
                 {
                     tourManager.Update();
@@ -270,7 +276,7 @@ namespace TourPlaner.ViewModels
             }
             else
             {
-                Debug.WriteLine("Kein TourModell ausgewählt.");
+                logger.Debug("Kein TourModell ausgewählt.");
             }
         }
 
@@ -303,7 +309,7 @@ namespace TourPlaner.ViewModels
                     log.Id = 0;
                 }
                 tourManager.AddTour(tour);
-                Debug.Print("Adding new tour: " + tour.Name);
+                logger.Debug("Adding new tour: " + tour.Name);
                 OnPropertyChanged(nameof(Tours));
                 tourButtonsViewModel.NewTourName = "";
             }
