@@ -81,8 +81,6 @@ namespace TourPlaner.ViewModels
         public event EventHandler<TourModel?>? DeleteTourButtonClicked;
         public event EventHandler<TourModel?>? ModifyTourButtonClicked;
 
-
-
         public EditButtonViewModel()
         {
             AddNewLogCommand = new RelayCommand((_) =>
@@ -130,6 +128,51 @@ namespace TourPlaner.ViewModels
                 if (viewModel.Result)
                     ModifyTourButtonClicked?.Invoke(this, viewModel.TourModel);
             }, (_) => SelectedTour != null); //not clickable when no tour is selected
+        }
+        public void EventTriggerUnitTest(object _model, string eventName)
+        {
+            switch (eventName) {
+                case "AddLogButtonClicked":
+                    {
+                        if (_model is LogModel model)
+                            AddLogButtonClicked?.Invoke(this, model);
+                        break;
+                    }
+                    
+                case "DeleteLogButtonClicked":
+                    {
+                        if (_model is LogModel model)
+                            DeleteLogButtonClicked?.Invoke(this, model);
+                        break;
+                    }
+
+                case "ModifyLogButtonClicked":
+                    {
+                        if (_model is LogModel model)
+                            ModifyLogButtonClicked?.Invoke(this, model);
+                        break;
+                    }
+
+                case "AddTourButtonClicked":
+                    {
+                        if (_model is TourModel model)
+                            AddTourButtonClicked?.Invoke(this, model);
+                        break;
+                    }
+;
+                case "DeleteTourButtonClicked":
+                    {
+                        if (_model is TourModel model)
+                            DeleteTourButtonClicked?.Invoke(this, model);
+                        break;
+                    }
+                case "ModifyTourButtonClicked":
+                    {
+                        if (_model is TourModel model)
+                            ModifyTourButtonClicked?.Invoke(this, model);
+                        break;
+                    }
+            }
         }
     }
 }

@@ -15,6 +15,7 @@ using TourPlaner.Views;
 using System.Windows.Forms;
 using Org.BouncyCastle.Utilities;
 
+
 namespace TourPlaner.ViewModels
 {
     public class MainViewModel : BaseViewModel
@@ -67,6 +68,8 @@ namespace TourPlaner.ViewModels
 
         public async void UpdateLeaflet()
         {
+            if (webView == null) //should never be the case but unit tests trigger this...
+                return;
             if (webView.CoreWebView2 == null)
                 return;
             if (SelectedTour == null)
@@ -81,6 +84,7 @@ namespace TourPlaner.ViewModels
             }
             string json = File.ReadAllText(fullPath).Replace("\n", String.Empty);
             await webView.CoreWebView2.ExecuteScriptAsync($"display('{json}');");
+
         }
     public ObservableCollection<TourModel> Tours { get; } = new ObservableCollection<TourModel>()
         {
@@ -148,14 +152,13 @@ namespace TourPlaner.ViewModels
             },
         };
 
-
         public MainViewModel(ITourManager _tourManager, EditButtonViewModel logButtonsViewModel, EditButtonViewModel tourButtonsViewModel)
         {
             tourManager = _tourManager;
             this.logButtonsViewModel = logButtonsViewModel;
             this.tourButtonsViewModel = tourButtonsViewModel;
             tourManager.Tours = Tours; //pass Tours Collection zum tour manager damit man hier nicht 2 mal die tours adden muss
-            PdfGenerierenCommand = new RelayCommand(PdfGenerieren);
+            PdfGenerierenCommand = new RelayCommand(PdfGenerieren, (_) => SelectedTour != null);
             TourImport = new RelayCommand(ImportTour);
             TourExport = new RelayCommand(ExportTour, (_) => SelectedTour != null);
 
@@ -197,8 +200,30 @@ namespace TourPlaner.ViewModels
             };
             tourButtonsViewModel.AddTourButtonClicked += async (sender, tour) =>
             {
-                string filename = await APICall.Call(tour.StartLocation, tour.EndLocation);
-                tour.FileName= filename;
+                if (tour.FileName == null)
+                {
+                    string filename = await APICall.Call(tour.StartLocation, tour.EndLocation);
+                    tour.FileName = filename;
+                    string appDir = AppDomain.CurrentDomain.BaseDirectory;
+                    string fullPath = System.IO.Path.Combine(appDir, "Resources", filename);
+                    if (!File.Exists(fullPath))
+                    {
+                        Debug.WriteLine("File Not Found!");
+                    }
+                    else
+                    {
+                        var json = File.ReadAllText(fullPath);
+                        var data = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(json);
+                        try
+                        {
+                            float a = data.features[0].properties.segments[0].distance;
+                            tour.Distance = $"{a}m";
+                        }
+                        catch {
+                            Debug.WriteLine("Couldnt Parse Json!");
+                        }
+                    }
+                }
                 tourManager.AddTour(tour);
                 Debug.Print("Adding new tour: " + tour.Name);
                 OnPropertyChanged(nameof(Tours));
@@ -207,10 +232,11 @@ namespace TourPlaner.ViewModels
             tourButtonsViewModel.DeleteTourButtonClicked += (sender, tour) =>
             {
                 Debug.Print($"Deleting tour: {tour?.Name}");
+                string filename = $"./Resources/{tour.FileName}";
                 if (tour != null)
                 {
-                    Debug.WriteLine(tour.FileName);
-                    File.Delete($"./Resources/{tour.FileName}");
+                    if (File.Exists(filename))
+                        File.Delete(filename);
                     tourManager.RemoveTour(tour);
                     OnPropertyChanged(nameof(Tours));
                 }
@@ -236,8 +262,6 @@ namespace TourPlaner.ViewModels
             var selectedItem = SelectedTour;
             if (selectedItem != null)
             {
-                Debug.WriteLine("TourModell ausgewählt.");
-
                 // Create an instance of PdfGenerator
                 var pdfGenerator = new PdfGenerator();
 

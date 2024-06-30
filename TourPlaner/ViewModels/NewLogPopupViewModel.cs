@@ -19,55 +19,6 @@ namespace TourPlaner.ViewModels
         private bool _result;
         public RelayCommand OkCommand { get; }
         public RelayCommand CancelCommand { get; }
-        public NewLogPopupViewModel(LogModel logModel)
-        {
-            _logModel = logModel;
-            _result = false;
-
-            OkCommand = new RelayCommand((parameter) => {
-                if (parameter is Window window)
-                {
-                foreach (string field in new List<string>{ LogModel.Date, LogModel.TotalTime, LogModel.TotalDistance , LogModel.Comment, LogModel.Difficulty, LogModel.Rating})
-                {
-                    if(String.IsNullOrEmpty(field)) {
-                        Result = false;
-                        window.Close();
-                        return;
-                    }
-                }
-                Result = true;
-                LogModel.Difficulty=Constricter(window, LogModel.Difficulty);
-                LogModel.Rating=Constricter(window, LogModel.Rating);
-                window.Close();
-                }
-            });
-            CancelCommand = new RelayCommand(
-                (parameter) =>
-                {
-                    if (parameter is Window window)
-                    {
-                        Result = false;
-                        window.Close();
-                    }
-                });
-        }
-        private string Constricter(Window window, string field)
-        {
-            if (float.TryParse(field.Replace(".",","), out float i))
-            {
-                float a = i > 10 ? 10 : i;
-                a = a < 0 ? 0 : a;
-                return a.ToString();
-            }
-            else
-            {
-                Result = false;
-                window.Close();
-                return "";
-            }
-        } 
-        public NewLogPopupViewModel() : this(new LogModel())
-        { }
         public LogModel LogModel
         {
             get { return _logModel; }
@@ -87,5 +38,51 @@ namespace TourPlaner.ViewModels
                 OnPropertyChanged(nameof(Result));
             }
         }
+        public NewLogPopupViewModel(LogModel logModel)
+        {
+            _logModel = logModel;
+            _result = false;
+
+            OkCommand = new RelayCommand((parameter) => {
+                Result = true;
+                LogModel.Difficulty = Constricter(LogModel.Difficulty);
+                LogModel.Rating = Constricter(LogModel.Rating);
+                if (!DateTime.TryParse(LogModel.Date, out DateTime _))
+                    Result = false;
+                foreach (string field in new List<string> { LogModel.Date, LogModel.TotalTime, LogModel.TotalDistance, LogModel.Comment, LogModel.Difficulty, LogModel.Rating })
+                {
+                    if (String.IsNullOrEmpty(field))
+                    {
+                        Result = false;
+                    }
+                }
+                if (parameter is Window window)
+                    window.Close();
+            });
+            CancelCommand = new RelayCommand(
+                (parameter) =>
+                {
+                    Result = false;
+                    if (parameter is Window window)
+                    {
+                        window.Close();
+                    }
+                });
+        }
+        private string Constricter(string field)
+        {
+            if (float.TryParse(field.Replace(".",","), out float i))
+            {
+                float a = i > 10 ? 10 : i;
+                a = a < 0 ? 0 : a;
+                return a.ToString();
+            }
+            else
+            {
+                return "";
+            }
+        } 
+        public NewLogPopupViewModel() : this(new LogModel())
+        { }
     }
 }

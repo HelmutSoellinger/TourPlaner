@@ -51,26 +51,25 @@ namespace TourPlaner.ViewModels
             _result = false;
 
             OkCommand = new RelayCommand((parameter) => {
-                if (parameter is Window window)
+                Result = true;
+                foreach (string field in new List<string> { TourModel.Name, TourModel.Description, TourModel.StartLocation, TourModel.EndLocation })
                 {
-                foreach (string field in new List<string>{ TourModel.Name, TourModel.Description, TourModel.StartLocation, TourModel.EndLocation })
+                    if (String.IsNullOrEmpty(field))
                     {
-                        if(String.IsNullOrEmpty(field)) {
-                            Result = false;
-                            window.Close();
-                            return;
-                        }
+                        Result = false;
                     }
-                    Result = true;
+                }
+                if (parameter is Window window)
+                { 
                     window.Close();
                 }
             });
             CancelCommand = new RelayCommand(
                 (parameter) =>
                 {
+                    Result = false;
                     if (parameter is Window window)
                     {
-                        Result = false;
                         window.Close();
                     }
                 });

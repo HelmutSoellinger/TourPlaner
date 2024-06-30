@@ -11,7 +11,7 @@ namespace TourPlaner.Models
         public string EndLocation { get; set; } = "";
         public string RouteInformation { get; set; } = "";
         public string Distance { get; set; } = "";
-        public string FileName { get; set; } = "";
+        public string FileName { get; set; }
         public ObservableCollection<LogModel> Logs { get; set; } = new ObservableCollection<LogModel>();
     }
 }
