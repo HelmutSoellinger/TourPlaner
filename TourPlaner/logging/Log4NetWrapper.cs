@@ -20,7 +20,7 @@ namespace TourPlaner.logging
                 string currentDirectory = System.IO.Directory.GetCurrentDirectory();
             // Debug.WriteLine($"Current working directory: {currentDirectory}");
 
-                throw new ArgumentException($"Konfigurationsdatei '{configPath}' existiert nicht.", nameof(configPath));
+              //throw new ArgumentException($"Konfigurationsdatei '{configPath}' existiert nicht.", nameof(configPath));
             }
 
             var logger = log4net.LogManager.GetLogger(caller);  // System.Reflection.MethodBase.GetCurrentMethod().DeclaringType
